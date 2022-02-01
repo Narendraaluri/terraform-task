@@ -40,22 +40,25 @@ resource "aws_route_table" "public_rt" {
 
 
 
-#public subnets
+#public subnet
 
-resource "aws_subnet" "subnets" {
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.0.0/24"
-  availability_zone = "ap-south-1a"
+resource "aws_subnet" "public_subnet" {
+  vpc_id                  = aws_vpc.vpc.id
+  for_each = {for subnet in var.vpc_subnet_cidr: subnet.availablity_zone => subnet}
+  cidr_block              = "10.0.0.0/24"
+  availability_zone       = "ap-south-1a"
+  map_public_ip_on_launch = true
 
   tags = {
-    Name = "public_subnet"
-
-
+    Name        = "public_subnet"
   }
 }
-resource "aws_route_table_association" "public-rt-ass" {
-  subnet_id      = element(aws_subnet.subnets.*.id, count.index)
-  route_table_id = aws_route_table.public_rt.id
+
+/* Route table associations */
+resource "aws_route_table_association" "public" {
+  for_each = {for subnet in var.vpc_subnet_cidr: subnet.availablity_zone => subnet}
+  subnet_id      = aws_subnet.public_subnet[each.key].id
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_security_group" "allow_all" {
