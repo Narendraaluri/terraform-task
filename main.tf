@@ -48,7 +48,7 @@ resource "aws_subnet" "subnets" {
   availability_zone = ["ap-south-1a", "ap-south-1b" ]
 
   tags = {
-    Name = "public_subnet-${count.index+1}"
+    Name = "public_subnet"
 
 
   }
