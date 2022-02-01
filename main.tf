@@ -54,7 +54,6 @@ resource "aws_subnet" "subnets" {
   }
 }
 resource "aws_route_table_association" "public-rt-ass" {
-  count = length(var.subnet_cidr)
   subnet_id      = element(aws_subnet.subnets.*.id, count.index)
   route_table_id = aws_route_table.public_rt.id
 }
@@ -84,7 +83,7 @@ resource "aws_instance" "web-1" {
     ami = "ami-083654bd07b5da81d"
     instance_type = "t2.micro"
     key_name = "nani"
-    subnet_id = aws_subnet.subnets.0.id
+    subnet_id = aws_subnet.subnets.id
     vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
     associate_public_ip_address = true
     tags = {
