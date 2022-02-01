@@ -44,8 +44,8 @@ resource "aws_route_table" "public_rt" {
 
 resource "aws_subnet" "subnets" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = ["10.0.0.0/24" ,"10.0.1.0/24"]
-  availability_zone = ["ap-south-1a", "ap-south-1b" ]
+  cidr_block        = "10.0.0.0/24"
+  availability_zone = "ap-south-1a"
 
   tags = {
     Name = "public_subnet"
